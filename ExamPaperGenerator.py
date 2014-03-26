@@ -28,8 +28,8 @@ class EPG_GenXls:
         tCol = int(pIdx) % 5 + 1
         self.mXlsSheet.Cells(tRow, tCol).Value = pContent
         
-    def writeComment(self, pExamQuestionNumber):
-        tTime = pExamQuestionNumber * 5 / 60
+    def writeComment(self, pExamCalParamNumber, pExamQuestionNumber):
+        tTime = pExamQuestionNumber * 5 / 60 * (pExamCalParamNumber / 2)
         tComments = "在" + str(tTime) + "分钟内完成!!"
         self.mXlsSheet.Cells(1, 1).Value = tComments.decode("utf8").encode("gbk")
         
@@ -102,7 +102,7 @@ class EPG_ExamAddition:
             tQuestion = tQuestion + " = "
             self.mGenXls.writeQuestion(tQuestionIdx, tQuestion)
             
-        self.mGenXls.writeComment(self.mExamQuestionNumber)
+        self.mGenXls.writeComment(self.mExamCalParamNumber, self.mExamQuestionNumber)
         self.mGenXls.formatContent(self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
@@ -159,7 +159,7 @@ class EPG_ExamSubtraction:
             tQuestion = tQuestion + " = "
             self.mGenXls.writeQuestion(tQuestionIdx, tQuestion)
 
-        self.mGenXls.writeComment(self.mExamQuestionNumber)
+        self.mGenXls.writeComment(self.mExamCalParamNumber, self.mExamQuestionNumber)
         self.mGenXls.formatContent(self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
@@ -223,13 +223,11 @@ class EPG_ExamAddSub:
                             tQuestion  = ""
                             tSuccess   = False
                             break
-
-                    print "%d" % tCalParam                        
             
             tQuestion = tQuestion + " = "
             self.mGenXls.writeQuestion(tQuestionIdx, tQuestion)
 
-        self.mGenXls.writeComment(self.mExamQuestionNumber)
+        self.mGenXls.writeComment(self.mExamCalParamNumber, self.mExamQuestionNumber)
         self.mGenXls.formatContent(self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
@@ -242,28 +240,28 @@ class EPG_ExamAddSub:
 if __name__ == "__main__":
     print '''
 \n
-请选择运算类型:
-1 - 加法
-2 - 减法
-3 - 加减混合
-4 - 乘法 [N/A]
-5 - 除法 [N/A]
-6 - 乘除混合 [N/A]
-7 - 加减乘除混合 [N/A]
+Please choose calculation type:
+1 - Addition
+2 - Subtraction
+3 - Addition-Subtraction mixed
+4 - Multiplication [N/A]
+5 - Division [N/A]
+6 - Multiplication-Division mixed [N/A]
+7 - Addition-Subtraction-Multiplication-Division mixed [N/A]
           '''
-    tExamCalType = int(raw_input("请选择运算类型, 输入编号(1, 2, 3, ...): "))
+    tExamCalType = int(raw_input("Please input calculation type index (1, 2, 3, ...): "))
     
     print "\n"
-    tExamCalParamNumber = int(raw_input("请输入运算参数个数 (2, 3, 4, ...): "))
+    tExamCalParamNumber = int(raw_input("Please input the number of calculation parameters (2, 3, 4, ...): "))
     
     print "\n"
-    tExamCalRange = int(raw_input("请输入运算范围 (10以内, 20以内, 30以内, ...): "))
+    tExamCalRange = int(raw_input("Please input the range of calculation (within 10, within 20, within 30, ...): "))
     
     print "\n"
-    tExamQuestionNumber = int(raw_input("请输入需要生成的题目数量 (50, 100, ...): "))
+    tExamQuestionNumber = int(raw_input("Please input the number of calculation questions (50, 100, ...): "))
     
     print "\n"
-    tExamPaperNumber = int(raw_input("请输入需要生成的试卷数量 (20, 40, ...): "))
+    tExamPaperNumber = int(raw_input("Please input the number of examination papers (20, 40, ...): "))
     
     for tExamPapgerIdx in range(tExamPaperNumber):
         if tExamCalType == 1:
@@ -276,6 +274,6 @@ if __name__ == "__main__":
             tAddSub = EPG_ExamAddSub(tExamCalParamNumber, tExamCalRange, tExamQuestionNumber)
             tAddSub.genExamPaper()
         else:
-            print "\n选择功能还在开发中, 敬请期待...!!"
+            print "\nThe function is in development, please wait...!!"
     
     
