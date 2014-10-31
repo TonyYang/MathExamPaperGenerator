@@ -53,10 +53,10 @@ class EPG_GenXls:
 
 
 ###############################################################################
-## 'EPG_ExamAddition' Class                                                  ##
+## 'EPG_ExamAdd' Class                                                       ##
 ## - Generate addition calculation examination paper.                        ##
 ###############################################################################
-class EPG_ExamAddition:
+class EPG_ExamAdd:
     def __init__(self, pExamCalParamNumber, pExamCalRange, pExamQuestionNumber):
         self.mExamCalParamNumber = pExamCalParamNumber
         self.mExamCalRange       = pExamCalRange
@@ -65,13 +65,13 @@ class EPG_ExamAddition:
         self.mFileName = "Addition_" + str(self.mExamCalParamNumber) + "_" + str(self.mExamCalRange) + "_" + str(self.mExamQuestionNumber) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
         self.mFileName = os.getcwd() + "\\" + self.mFileName
         
-        print "EPG_ExamAddition XLS file name is %s!! \n" % self.mFileName        
+        print "[EPG_ExamAdd] Excel file name is %s!! \n" % self.mFileName        
         
         self.mGenXls = EPG_GenXls(self.mFileName)
         
     def genExamPaper(self):
         for tQuestionIdx in range(self.mExamQuestionNumber):
-            print "EPG_ExamAddition generate No.%d question!! \n" % tQuestionIdx
+            print "[EPG_ExamAdd] Generate No.%d question!! \n" % tQuestionIdx
             tCalParam  = 0
             tQuestion  = ""
             tCalResult = 0
@@ -79,7 +79,7 @@ class EPG_ExamAddition:
             
             while not tSuccess:
                 for tCalParamIdx in range(self.mExamCalParamNumber):
-                    print "EPG_ExamAddition generate No.%d parameter!! \n" % tCalParamIdx
+                    print "[EPG_ExamAdd] Generate No.%d parameter!! \n" % tCalParamIdx
                     
                     if tCalParamIdx == 0:
                         tCalParam  = random.randint(1, self.mExamCalRange -1)
@@ -92,7 +92,7 @@ class EPG_ExamAddition:
                         tCalResult = tCalResult + tCalParam
                         tSuccess   = True
                     else:
-                        print "EPG_ExamAddition generate question failed!! Re-trying!! \n"
+                        print "[EPG_ExamAdd] Generating question failed!! Re-trying!! \n"
                         tCalParam  = 0
                         tQuestion  = ""
                         tCalResult = 0
@@ -106,14 +106,14 @@ class EPG_ExamAddition:
         self.mGenXls.formatContent(self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
-        print "EPG_ExamAddition generate examination pager completed!! \n"
+        print "[EPG_ExamAdd] Generating examination pager completed!! \n"
 
 
 ###############################################################################
-## 'EPG_ExamSubtractio' Class                                                ##
+## 'EPG_ExamSub' Class                                                       ##
 ## - Generate subtraction calculation questions.                             ##
 ###############################################################################
-class EPG_ExamSubtraction:
+class EPG_ExamSub:
     def __init__(self, pExamCalParamNumber, pExamCalRange, pExamQuestionNumber):
         self.mExamCalParamNumber = pExamCalParamNumber
         self.mExamCalRange       = pExamCalRange
@@ -122,13 +122,13 @@ class EPG_ExamSubtraction:
         self.mFileName = "Subtraction_" + str(self.mExamCalParamNumber) + "_" + str(self.mExamCalRange) + "_" + str(self.mExamQuestionNumber) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
         self.mFileName = os.getcwd() + "\\" + self.mFileName
         
-        print "EPG_ExamSubtraction XLS file name is %s!!" % self.mFileName
+        print "[EPG_ExamSub] Excel file name is %s!!" % self.mFileName
         
         self.mGenXls = EPG_GenXls(self.mFileName)
     
     def genExamPaper(self):
         for tQuestionIdx in range(self.mExamQuestionNumber):
-            print "EPG_ExamSubtraction generate No.%d question!! \n" % tQuestionIdx
+            print "[EPG_ExamSub] Generate No.%d question!! \n" % tQuestionIdx
             tCalParam  = 0
             tQuestion  = ""
             tCalResult = 0
@@ -136,7 +136,7 @@ class EPG_ExamSubtraction:
             
             while not tSuccess:
                 for tCalParamIdx in range(self.mExamCalParamNumber):
-                    print "EPG_ExamSubtraction generate No.%d parameter!! \n" % tCalParamIdx
+                    print "[EPG_ExamSub] Generate No.%d parameter!! \n" % tCalParamIdx
                     
                     if tCalParamIdx == 0:
                         tCalParam  = random.randint(1, self.mExamCalRange - 1)
@@ -149,7 +149,7 @@ class EPG_ExamSubtraction:
                         tCalResult = tCalResult - tCalParam
                         tSuccess   = True
                     else:
-                        print "EPG_ExamSubtraction generate question failed!! Re-trying!! \n"
+                        print "[EPG_ExamSub] Generating question failed!! Re-trying!! \n"
                         tCalParam  = 0
                         tQuestion  = ""
                         tCalResult = 0
@@ -163,7 +163,7 @@ class EPG_ExamSubtraction:
         self.mGenXls.formatContent(self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
-        print "EPG_ExamSubtraction generate examination paper completed!! \n"
+        print "[EPG_ExamSub] Generating examination paper completed!! \n"
 
 
 ###############################################################################
@@ -180,13 +180,13 @@ class EPG_ExamAddSub:
         self.mFileName = "AddSub_" + str(self.mExamCalParamNumber) + "_" + str(self.mExamCalRange) + "_" + str(self.mExamQuestionNumber) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
         self.mFileName = os.getcwd() + "\\" + self.mFileName
         
-        print "EPG_ExamAddSub XLS file name is %s!!" % self.mFileName        
+        print "[EPG_ExamAddSub] Excel file name is %s!!" % self.mFileName        
         
         self.mGenXls = EPG_GenXls(self.mFileName)
         
     def genExamPaper(self):
         for tQuestionIdx in range(self.mExamQuestionNumber) :
-            print "EPG_ExamAddSub generate No.%d question!! \n" % tQuestionIdx
+            print "[EPG_ExamAddSub] Generate No.%d question!! \n" % tQuestionIdx
             
             tCalResult = 0
             tCalType   = 0
@@ -196,7 +196,7 @@ class EPG_ExamAddSub:
             
             while not tSuccess:
                 for tParamIdx in range(self.mExamCalParamNumber):
-                    print "EPG_ExamAddSub generate No.%d parameter!! \n" % tParamIdx
+                    print "[EPG_ExamAddSub] Generate No.%d parameter!! \n" % tParamIdx
                     
                     if tParamIdx == 0:
                         tCalParam  = random.randint(1, self.mExamCalRange - 1)
@@ -231,7 +231,107 @@ class EPG_ExamAddSub:
         self.mGenXls.formatContent(self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
-        print "EPG_ExamAddSub generate examination paper completed!! \n"
+        print "[EPG_ExamAddSub] Generate examination paper completed!! \n"
+
+
+###############################################################################
+## 'EPG_ExamMul' Class                                                       ##
+## - Generate multiplication calculation questions randomly.                 ##
+###############################################################################
+class EPG_ExamMul:
+    def __init__(self, pExamCalParamNum, pExamCalRange, pExamQuestionNum):
+        self.mExamCalParamNum = pExamCalParamNum
+        self.mExamCalRange    = pExamCalRange
+        self.mExamQuestionNum = pExamQuestionNum
+        
+        self.mFileName = "Mul_" + str(self.mExamCalParamNum) + "_" + str(self.mExamCalRange) + "_" + str(self.mExamQuestionNum) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
+        self.mFileName = os.getcwd() + "\\" + self.mFileName
+        
+        print "[EPG_ExamMul] Excel file name is %s!!" % self.mFileName
+        
+        self.mGenXls = EPG_GenXls(self.mFileName)
+        
+    def genExamPaper(self):
+        for tQuestionIdx in range(self.mExamQuestionNum):
+            print "[EPG_ExamMul] Generate No.%d question!! \n" % tQuestionIdx
+            tCalParam  = 0
+            tQuestion  = ""
+
+            print "[EPG_ExamMul] Generate No.1 parameter!! \n"
+            tCalParam = random.randint(1, self.mExamCalRange)
+            tQuestion = tQuestion + str(tCalParam)
+
+            print "[EPG_ExamMul] Generate No.2 parameter!! \n"            
+            tCalParam = random.randint(1, self.mExamCalRange)
+            tQuestion = tQuestion + " x " + str(tCalParam)
+                        
+            tQuestion = tQuestion + " = "
+            self.mGenXls.writeQuestion(tQuestionIdx, tQuestion)
+
+        self.mGenXls.writeComment(self.mExamCalParamNum, self.mExamQuestionNum)
+        self.mGenXls.formatContent(self.mExamQuestionNum)
+        self.mGenXls.saveFile()
+        
+        print "[EPG_ExamMul] Generating examination paper completed!! \n"
+
+
+###############################################################################
+## 'EPG_ExamAddSubMul' Class                                                 ##
+## - Generate Addition calculation questions randomly.                       ##
+## - Generate Subtraction calculation questions randomly.                    ##
+## - Generate multiplication calculation questions randomly.                 ##
+###############################################################################
+class EPG_ExamAddSubMul:
+    def __init__(self, pExamAddSubMulCalParamNum, pExamAddSubCalRange, pExamMulCalRange, pExamQuestionNum):
+        self.mExamAddSubMulCalParamNum = pExamAddSubMulCalParamNum
+        self.mExamAddSubCalRange       = pExamAddSubCalRange
+        self.mExamMulCalRange          = pExamMulCalRange
+        self.mExamQuestionNum          = pExamQuestionNum
+        
+        self.mFileName = "AddSubMul_" + str(self.mExamAddSubMulCalParamNum) + "_" + str(self.mExamAddSubCalRange) + "_" + "_" + str(self.mExamMulCalRange) + "_" + str(self.mExamQuestionNum) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
+        self.mFileName = os.getcwd() + "\\" + self.mFileName
+        
+        print "[EPG_ExamAddSubMul] Excel file name is %s!!" % self.mFileName
+        
+        self.mGenXls = EPG_GenXls(self.mFileName)
+
+    def genExamPaper(self):
+        for tQuestionIdx in range(self.mExamQuestionNum):
+            print "[EPG_ExamAddSubMul] Generate No.%d question!! \n" % tQuestionIdx
+            tCalParam1 = 0
+            tCalParam2 = 0
+            tCalType   = 0
+            tCalSymbol = ""
+            tQuestion  = ""
+            
+            tCalType = random.randint(1, 3)
+            
+            ## Addition calculation.
+            if tCalType == 1:
+                tCalParam1 = random.randint(1, self.mExamAddSubCalRange - 1)
+                tCalParam2 = random.randint(1, self.mExamAddSubCalRange - tCalParam1)
+                tCalSymbol = " + "
+
+            ## Subtraction calculation    
+            elif tCalType == 2:
+                tCalParam1 = random.randint(2, self.mExamAddSubCalRange - 1)
+                tCalParam2 = random.randint(1, tCalParam1 - 1)
+                tCalSymbol = " - "
+
+            ## Multiplication calculation
+            else:
+                tCalParam1 = random.randint(1, self.mExamMulCalRange)
+                tCalParam2 = random.randint(1, self.mExamMulCalRange)
+                tCalSymbol = " x "
+                
+            tQuestion = tQuestion + str(tCalParam1) + tCalSymbol + str(tCalParam2) + " = "
+            self.mGenXls.writeQuestion(tQuestionIdx, tQuestion)
+            
+        self.mGenXls.writeComment(self.mExamAddSubMulCalParamNum, self.mExamQuestionNum)
+        self.mGenXls.formatContent(self.mExamQuestionNum)
+        self.mGenXls.saveFile()
+        
+        print "[EPG_ExamAddSubMul] Generating examination paper completed!! \n"
 
 
 ###############################################################################
@@ -244,36 +344,73 @@ Please choose calculation type:
 1 - Addition
 2 - Subtraction
 3 - Addition-Subtraction mixed
-4 - Multiplication [N/A]
-5 - Division [N/A]
-6 - Multiplication-Division mixed [N/A]
-7 - Addition-Subtraction-Multiplication-Division mixed [N/A]
+4 - Multiplication
+5 - Addition-Subtraction-Multiplication mixed
+6 - Division [N/A]
+7 - Multiplication-Division mixed [N/A]
+8 - Addition-Subtraction-Multiplication-Division mixed [N/A]
           '''
-    tExamCalType = int(raw_input("Please input calculation type index (1, 2, 3, ...): "))
     
+    ## Ask user to select calculation type.
+    tExamType = int(raw_input("Please input calculation type index (1, 2, 3, ...): "))
+    
+    ## Ask user to input how many questions will be generated in one paper.
     print "\n"
-    tExamCalParamNumber = int(raw_input("Please input the number of calculation parameters (2, 3, 4, ...): "))
-    
+    tExamQuestionNum = int(raw_input("Please input the number of calculation questions (50, 100, ...): "))
+        
+    ## Ask user to input how many examination papers will be generated.
     print "\n"
-    tExamCalRange = int(raw_input("Please input the range of calculation (within 10, within 20, within 30, ...): "))
+    tExamPaperNum = int(raw_input("Please input the number of examination papers (20, 40, ...): "))
     
-    print "\n"
-    tExamQuestionNumber = int(raw_input("Please input the number of calculation questions (50, 100, ...): "))
-    
-    print "\n"
-    tExamPaperNumber = int(raw_input("Please input the number of examination papers (20, 40, ...): "))
-    
-    for tExamPapgerIdx in range(tExamPaperNumber):
-        if tExamCalType == 1:
-            tAddition = EPG_ExamAddition(tExamCalParamNumber, tExamCalRange, tExamQuestionNumber)
-            tAddition.genExamPaper()
-        elif tExamCalType == 2:
-            tSubtraction = EPG_ExamSubtraction(tExamCalParamNumber, tExamCalRange, tExamQuestionNumber)
-            tSubtraction.genExamPaper()
-        elif tExamCalType == 3:
-            tAddSub = EPG_ExamAddSub(tExamCalParamNumber, tExamCalRange, tExamQuestionNumber)
+    ## Ask user to input calculation parameter and range.
+    if tExamType == 1 or tExamType == 2 or tExamType == 3:
+        print "\n"
+        tExamAddSubCalParamNum = int(raw_input("Please input the number of add-sub calculation parameters (2, 3, 4, ...): "))
+        
+        print "\n"
+        tExamAddSubCalRange = int(raw_input("Please input the range of add-sub calculation (within 10, within 20, within 30, ...): "))
+
+    elif tExamType == 4:
+        tExamMulCalParamNum = 2
+        
+        print "\n"
+        tExamMulCalRange = int(raw_input("Please input the range of multiplication calculation (within 5, 9, 12, ...): "))
+
+    elif tExamType == 5:
+        tExamAddSubMulCalParamNum = 2
+        
+        print "\n"
+        tExamAddSubCalRange = int(raw_input("Please input the range of add-sub calculation (within 10, within 20, within 30, ...): "))
+        
+        print "\n"
+        tExamMulCalRange = int(raw_input("Please input the range of multiplication calculation (within 5, 9, 12, ...): "))
+
+    else:
+        print "\n"
+        print "The calculation type is NOT supported!!"
+
+    ## Generate examination papers.
+    for tExamPapgerIdx in range(tExamPaperNum):
+        if tExamType == 1:
+            tAdd = EPG_ExamAdd(tExamAddSubCalParamNum, tExamAddSubCalRange, tExamQuestionNum)
+            tAdd.genExamPaper()
+        
+        elif tExamType == 2:
+            tSub = EPG_ExamSub(tExamAddSubCalParamNum, tExamAddSubCalRange, tExamQuestionNum)
+            tSub.genExamPaper()
+        
+        elif tExamType == 3:
+            tAddSub = EPG_ExamAddSub(tExamAddSubCalParamNum, tExamAddSubCalRange, tExamQuestionNum)
             tAddSub.genExamPaper()
+        
+        elif tExamType == 4:
+            tMul = EPG_ExamMul(tExamMulCalParamNum, tExamMulCalRange, tExamQuestionNum)
+            tMul.genExamPaper()
+        
+        elif tExamType == 5:
+            tAddSubMul = EPG_ExamAddSubMul(tExamAddSubMulCalParamNum, tExamAddSubCalRange, tExamMulCalRange, tExamQuestionNum)
+            tAddSubMul.genExamPaper()
+            
         else:
-            print "\nThe function is in development, please wait...!!"
-    
-    
+            print "\n\n"
+            print "The calculation type is NOT supported!!"
