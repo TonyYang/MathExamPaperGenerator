@@ -3,7 +3,9 @@
 
 from win32com.client import Dispatch
 
+
 import random, time, os
+
 
 ###############################################################################
 ## Global variable definition                                                ##
@@ -18,6 +20,7 @@ CAL_OP_ADD_STR = " + "
 CAL_OP_SUB_STR = " - "
 CAL_OP_MUL_STR = " x "
 CAL_OP_DIV_STR = " / "
+
 
 ###############################################################################
 ## EPG_XlsGen Class                                                          ##
@@ -35,30 +38,75 @@ class EPG_GenXls:
         
         self.mXlsBook = self.mXlsApp.Workbooks.Add()
         self.mXlsSheet = self.mXlsBook.Worksheets.Add()
+
         
     def writeQuestion(self, pIdx, pContent):
         tRow = int(pIdx) / 5 + 2
         tCol = int(pIdx) % 5 + 1
         self.mXlsSheet.Cells(tRow, tCol).Value = pContent
+
         
+    def writeQuestion2(self, pIdx, pContent):
+        tRow = int(pIdx) / 3 + 2
+        tCol = int(pIdx) % 3 + 1
+        self.mXlsSheet.Cells(tRow, tCol).Value = pContent
+
+
     def writeComment(self, pExamCalParamNumber, pExamQuestionNumber):
-        tTime = pExamQuestionNumber * 5 / 60 * (pExamCalParamNumber / 2)
+        tTime = pExamQuestionNumber * (pExamCalParamNumber / 3)
         tComments = "在" + str(tTime) + "分钟内完成!!"
         self.mXlsSheet.Cells(1, 1).Value = tComments.decode("utf8").encode("gbk")
-        
+
+
+    def writeComment2(self, pExamCalParamNumber, pExamQuestionNumber):
+        tTime = pExamQuestionNumber * (pExamCalParamNumber / 2)
+        tComments = "在" + str(tTime) + "分钟内完成!!"
+        self.mXlsSheet.Cells(1, 1).Value = tComments.decode("utf8").encode("gbk")
+
+
     def formatContent(self, pExamQuestionNumber):
         # Format column width
         self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(1, 5)).ColumnWidth = 25
+        
         # Format font
-        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 5 + 1, 5)).Font.Bold = True
-        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 5 + 1, 5)).Font.Name = "Calibri"
-        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 5 + 1, 5)).Font.Size = 16
+        if (pExamQuestionNumber % 5) != 0:
+            rowPlus = 2
+        else:
+            rowPlus = 1
+        #
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 5 + rowPlus, 5)).Font.Bold = True
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 5 + rowPlus, 5)).Font.Name = "Calibri"
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 5 + rowPlus, 5)).Font.Size = 16
+        
         # Format border
         for iRow in range(1, pExamQuestionNumber / 5 + 2):
             for iCol in range(1, 6):
                 for iBorder in range(1, 5):
                     self.mXlsSheet.Cells(iRow, iCol).Borders(iBorder).LineStyle = 1
+
+
+    def formatContent2(self, pExamQuestionNumber):
+        # Define column width
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(1, 3)).ColumnWidth = 45
+        # Define font
+        if (pExamQuestionNumber % 3) != 0:
+            rowPlus = 2
+        else:
+            rowPlus = 1
+        #    
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 3 + rowPlus, 3)).Font.Bold = True
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 3 + rowPlus, 3)).Font.Name = "Calibri"
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(1, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 3 + rowPlus, 3)).Font.Size = 16
+        # Define row's height
+        self.mXlsSheet.Range(self.mXlsSheet.Cells(2, 1), self.mXlsSheet.Cells(pExamQuestionNumber / 3 + rowPlus, 3)).RowHeight = 120
         
+        # Format border
+        for iRow in range(1, pExamQuestionNumber / 3 + rowPlus + 1):
+            for iCol in range(1, 4):
+                for iBorder in range(1, 5):
+                    self.mXlsSheet.Cells(iRow, iCol).Borders(iBorder).LineStyle = 1
+
+
     def saveFile(self):
         self.mXlsBook.SaveAs(self.mFileName)
         self.mXlsBook.Close(SaveChanges = 0)
@@ -180,20 +228,21 @@ class EPG_ExamSub:
 
 
 ###############################################################################
-## 'EPG_ExamAddSubRandom' Class                                              ##
+## 'EPG_ExamAddSubMixed' Class                                               ##
 ## - Generate addition calculation questions randomly.                       ##
 ## - Generate subtraction calculation questions randomly.                    ##
 ###############################################################################
-class EPG_ExamAddSubRandom:
-    def __init__(self, pExamCalParamNumber, pExamCalRange, pExamQuestionNumber):
+class EPG_ExamAddSubMixed:
+    def __init__(self, pExamCalParamNumber, pExamCalMinRange, pExamCalMaxRange, pExamQuestionNumber):
         self.mExamCalParamNumber = pExamCalParamNumber
-        self.mExamCalRange       = pExamCalRange
+        self.mExamCalMinRange    = pExamCalMinRange
+        self.mExamCalMaxRange    = pExamCalMaxRange
         self.mExamQuestionNumber = pExamQuestionNumber
         
-        self.mFileName = "AddSubRandom_" + str(self.mExamCalParamNumber) + "_" + str(self.mExamCalRange) + "_" + str(self.mExamQuestionNumber) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
+        self.mFileName = "AddSubMixed_" + str(self.mExamCalParamNumber) + "_" + str(self.mExamCalMinRange) + "_" + str(self.mExamCalMaxRange) + "_" + str(self.mExamQuestionNumber) + "_" + time.strftime("%Y%m%d") + "_" + time.strftime("%H%M%S")
         self.mFileName = os.getcwd() + "\\" + self.mFileName
         
-        print "[EPG_ExamAddSubRandom] Excel file name is %s!!" % self.mFileName        
+        print "[EPG_ExamAddSubMixed] Excel file name is %s!!" % self.mFileName        
         
         self.mGenXls = EPG_GenXls(self.mFileName)
         
@@ -207,23 +256,23 @@ class EPG_ExamAddSubRandom:
         
         while not tSuccess:
             for tParamIdx in range(self.mExamCalParamNumber):
-                print "[EPG_ExamAddSubRandom] Generate No.%d parameter!! \n" % tParamIdx
+                print "[EPG_ExamAddSubMixed] Generate No.%d parameter!! \n" % tParamIdx
                 
                 if tParamIdx == 0:
-                    tCalParam  = random.randint(1, self.mExamCalRange - 1)
+                    tCalParam  = random.randint(self.mExamCalMinRange, self.mExamCalMaxRange - 1)
                     tQuestion  = tQuestion + str(tCalParam)
                     tCalResult = tCalParam
                     tSuccess   = True
                 else:
                     tCalType = random.randint(1, 2)
                     
-                    if tCalType == 1 and (self.mExamCalRange - tCalResult ) > 1:
-                        tCalParam  = random.randint(1, self.mExamCalRange - tCalResult - 1)
+                    if tCalType == 1 and (self.mExamCalMaxRange - tCalResult ) > self.mExamCalMinRange:
+                        tCalParam  = random.randint(self.mExamCalMinRange, self.mExamCalMaxRange - tCalResult - 1)
                         tQuestion  = tQuestion + " + " + str(tCalParam)
                         tCalResult = tCalResult + tCalParam
                         tSuccess   = True
-                    elif tCalType == 2 and tCalResult > 1:
-                        tCalParam  = random.randint(1, tCalResult - 1)
+                    elif tCalType == 2 and tCalResult > self.mExamCalMinRange:
+                        tCalParam  = random.randint(self.mExamCalMinRange, tCalResult - 1)
                         tQuestion  = tQuestion + " - " + str(tCalParam)
                         tCalResult = tCalResult - tCalParam
                         tSuccess   = True
@@ -235,23 +284,23 @@ class EPG_ExamAddSubRandom:
                         tSuccess   = False
                         break
             
-            tQuestion = tQuestion + " = "
-            
-            return tQuestion
+        tQuestion = tQuestion + " = "
+           
+        return tQuestion
     
     def genExamPaper(self):
         for tQuestionIdx in range(self.mExamQuestionNumber) :
-            print "[EPG_ExamAddSubRandom] Generate No.%d question!! \n" % tQuestionIdx
+            print "[EPG_ExamAddSubMixed] Generate No.%d question!! \n" % tQuestionIdx
             
             mExpression = self.genExpression()
             
-            self.mGenXls.writeQuestion(tQuestionIdx, mExpression)
+            self.mGenXls.writeQuestion2(tQuestionIdx, mExpression)
 
-        self.mGenXls.writeComment(self.mExamCalParamNumber, self.mExamQuestionNumber)
-        self.mGenXls.formatContent(self.mExamQuestionNumber)
+        self.mGenXls.formatContent2(self.mExamQuestionNumber)
+        self.mGenXls.writeComment2(self.mExamCalParamNumber, self.mExamQuestionNumber)
         self.mGenXls.saveFile()
         
-        print "[EPG_ExamAddSubRandom] Generate examination paper completed!! \n"
+        print "[EPG_ExamAddSubMixed] Generate examination paper completed!! \n"
 
 
 ###############################################################################
@@ -390,7 +439,7 @@ class EPG_ExamAddSubMulMixed:
         mOp2         = 0
         mOpStr1      = ""
         mOpStr2      = ""
-        mExpression    = ""
+        mExpression  = ""
         
         mMulDivFirst = random.randint(0, 1)
         
@@ -465,9 +514,9 @@ class EPG_ExamAddSubMulRandomMixed:
         self.mGenXls = EPG_GenXls(self.mFileName)
         
     def genExpression(self):
-        mExpression = ""
-        
+        mExpression    = ""
         mRandomOrMixed = 0
+        
         mRandomOrMixed = random.randint(1, 2)
         
         if mRandomOrMixed == 1:
@@ -505,6 +554,7 @@ Please choose calculation type:
 5 - Addition-Subtraction-Multiplication random
 6 - Addition-Subtraction-Multiplication mixed
 7 - Addition-Subtraction-Multiplication random & mixed
+8 - Addition-Subtraction mixed (3 digits)
 ============================================================
 # - Division [N/A]
 # - Multiplication-Division mixed [N/A]
@@ -529,7 +579,8 @@ Please choose calculation type:
     ## Addition-Subtraction mixed
     elif mCalType == 3:
         mOperandNum = 3
-        mCalRange = 100
+        mCalMinRange = 1
+        mCalMaxRange = 100
     ## Multiplication
     elif mCalType == 4:
         mOperandNum = 2
@@ -549,6 +600,11 @@ Please choose calculation type:
         mOperandNum = 3
         mAddSubCalRange = 100
         mMulCalRange = 9
+    ## Addition-Subtraction mixed (3 digits)
+    elif mCalType == 8:
+        mOperandNum = 2
+        mCalMinRange = 100
+        mCalMaxRange = 1000
     ## Not supported
     else:
         print "\n"
@@ -565,7 +621,7 @@ Please choose calculation type:
             mSub.genExamPaper()
         
         elif mCalType == 3:
-            mAddSubRandom = EPG_ExamAddSubRandom(mOperandNum, mCalRange, mExpressionNum)
+            mAddSubRandom = EPG_ExamAddSubMixed(mOperandNum, mCalMinRange, mCalMaxRange, mExpressionNum)
             mAddSubRandom.genExamPaper()
         
         elif mCalType == 4:
@@ -583,6 +639,10 @@ Please choose calculation type:
         elif mCalType == 7:
             mAddSubMulRandomMixed = EPG_ExamAddSubMulRandomMixed(mExpressionNum)
             mAddSubMulRandomMixed.genExamPaper()
+            
+        elif mCalType == 8:
+            mAddSubMixed = EPG_ExamAddSubMixed(mOperandNum, mCalMinRange, mCalMaxRange, mExpressionNum)
+            mAddSubMixed.genExamPaper()
         
         else:
             print "\n\n"
